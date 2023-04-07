@@ -15,6 +15,7 @@ const Login = () => {
                 type="email"
                 className="form-control"
                 placeholder="Enter email"
+                data-testid="email-input"
               />
             </div>
 
@@ -24,6 +25,7 @@ const Login = () => {
                 type="password"
                 className="form-control"
                 placeholder="Enter password"
+                data-testid="password-input"
               />
             </div>
 
@@ -39,9 +41,18 @@ const Login = () => {
                 </label>
               </div>
             </div>
-
-            <button type="submit" className="btn btn-primary btn-block">
-              Submit
+            <button
+              className="btn btn-primary btn-block"
+              data-testid="signup-button"
+            >
+              회원가입
+            </button>
+            <button
+              type="submit"
+              className="btn btn-danger btn-block"
+              data-testid="signin-button"
+            >
+              로그인
             </button>
           </form>
         </div>
