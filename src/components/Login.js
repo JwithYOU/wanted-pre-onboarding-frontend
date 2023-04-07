@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const Login = () => {
@@ -30,26 +31,13 @@ const Login = () => {
             </div>
 
             <div className="form-group">
-              <div className="custom-control custom-checkbox">
-                <input
-                  type="checkbox"
-                  className="custom-control-input"
-                  id="customCheck1"
-                />
-                <label className="custom-control-label" htmlFor="customCheck1">
-                  Remember me
-                </label>
-              </div>
+              <p>
+                <Link to="/Signup">아직 회원이 아니신가요?</Link>
+              </p>
             </div>
             <button
-              className="btn btn-primary btn-block"
-              data-testid="signup-button"
-            >
-              회원가입
-            </button>
-            <button
               type="submit"
-              className="btn btn-danger btn-block"
+              className="btn btn-primary btn-block"
               data-testid="signin-button"
             >
               로그인
