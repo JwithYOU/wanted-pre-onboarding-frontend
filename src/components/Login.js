@@ -5,23 +5,27 @@ import "bootstrap/dist/css/bootstrap.min.css";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [psword, setPsword] = useState("");
-  const [validation, setValidation] = useState(true);
+  const [formValid, setFormValid] = useState(true);
 
   const emailHandleChange = (e) => {
     e.preventDefault();
     setEmail(e.target.value);
+    if (e.target.value.includes("@") && psword.length >= 8) {
+      setFormValid(false);
+    } else {
+      setFormValid(true);
+    }
   };
 
   const pswordHandleChange = (e) => {
     e.preventDefault();
     setPsword(e.target.value);
+    if (e.target.value.length >= 8 && email.includes("@")) {
+      setFormValid(false);
+    } else {
+      setFormValid(true);
+    }
   };
-
-  const isEmailValid = email.includes("@");
-  const isPswordValid = psword.length >= 8;
-  const isFormValid = isEmailValid && isPswordValid;
-
-  const handleSubmit = (e) => {};
 
   return (
     <div className="container">
@@ -56,14 +60,14 @@ const Login = () => {
 
             <div className="form-group">
               <p>
-                <Link to="/Signup">아직 회원이 아니신가요?</Link>
+                <Link to="/signup">아직 회원이 아니신가요?</Link>
               </p>
             </div>
             <button
               type="submit"
               className="btn btn-primary btn-block"
               data-testid="signin-button"
-              disabled={!isFormValid}
+              disabled={formValid}
             >
               로그인
             </button>

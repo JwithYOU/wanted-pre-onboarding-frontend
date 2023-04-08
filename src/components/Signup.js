@@ -1,8 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const Signup = () => {
+  const [email, setEmail] = useState("");
+  const [psword, setPsword] = useState("");
+  const [formValid, setFormValid] = useState(true);
+
+  const emailHandleChange = (e) => {
+    e.preventDefault();
+    setEmail(e.target.value);
+    if (e.target.value.includes("@") && psword.length >= 8) {
+      setFormValid(false);
+    } else {
+      setFormValid(true);
+    }
+  };
+
+  const pswordHandleChange = (e) => {
+    e.preventDefault();
+    setPsword(e.target.value);
+    if (e.target.value.length >= 8 && email.includes("@")) {
+      setFormValid(false);
+    } else {
+      setFormValid(true);
+    }
+  };
   return (
     <div className="container">
       <div className="row">
@@ -14,6 +37,8 @@ const Signup = () => {
               <label>Email address</label>
               <input
                 type="email"
+                value={email}
+                onChange={emailHandleChange}
                 className="form-control"
                 placeholder="Enter email"
                 data-testid="email-input"
@@ -24,6 +49,8 @@ const Signup = () => {
               <label>Password</label>
               <input
                 type="password"
+                value={psword}
+                onChange={pswordHandleChange}
                 className="form-control"
                 placeholder="Enter password"
                 data-testid="password-input"
@@ -37,8 +64,9 @@ const Signup = () => {
             <button
               className="btn btn-danger btn-block"
               data-testid="signup-button"
+              disabled={formValid}
             >
-              회원가입
+              <Link to="/signin">회원가입</Link>
             </button>
           </form>
         </div>
