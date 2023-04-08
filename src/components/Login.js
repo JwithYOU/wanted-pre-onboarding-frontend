@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -7,6 +7,14 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [psword, setPsword] = useState("");
   const [formValid, setFormValid] = useState(true);
+  const [jwt, setJwt] = useState("");
+
+  useEffect(() => {
+    setJwt(localStorage.getItem("JWT"));
+    if (jwt) {
+      return (window.location.href = "/todo");
+    }
+  }, [jwt]);
 
   const emailHandleChange = (e) => {
     e.preventDefault();
