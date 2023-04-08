@@ -1,8 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [psword, setPsword] = useState("");
+  const [validation, setValidation] = useState(true);
+
+  const emailHandleChange = (e) => {
+    e.preventDefault();
+    setEmail(e.target.value);
+  };
+
+  const pswordHandleChange = (e) => {
+    e.preventDefault();
+    setPsword(e.target.value);
+  };
+
+  const isEmailValid = email.includes("@");
+  const isPswordValid = psword.length >= 8;
+  const isFormValid = isEmailValid && isPswordValid;
+
+  const handleSubmit = (e) => {};
+
   return (
     <div className="container">
       <div className="row">
@@ -14,6 +34,8 @@ const Login = () => {
               <label>Email address</label>
               <input
                 type="email"
+                value={email}
+                onChange={emailHandleChange}
                 className="form-control"
                 placeholder="Enter email"
                 data-testid="email-input"
@@ -24,6 +46,8 @@ const Login = () => {
               <label>Password</label>
               <input
                 type="password"
+                value={psword}
+                onChange={pswordHandleChange}
                 className="form-control"
                 placeholder="Enter password"
                 data-testid="password-input"
@@ -39,6 +63,7 @@ const Login = () => {
               type="submit"
               className="btn btn-primary btn-block"
               data-testid="signin-button"
+              disabled={!isFormValid}
             >
               로그인
             </button>
