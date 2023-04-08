@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const Login = () => {
@@ -25,6 +26,26 @@ const Login = () => {
     } else {
       setFormValid(true);
     }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios
+      .post(
+        "https://www.pre-onboarding-selection-task.shop/auth/signin",
+        { email: email, password: psword },
+        { headers: { "Content-Type": "application/json" } }
+      )
+      .then((res) => {
+        console.log(res.status);
+        if (res.status === 200) {
+          localStorage.setItem("JWT", res.data.access_token);
+          window.location.href = "/todo";
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   return (
@@ -73,15 +94,14 @@ const Login = () => {
                   로그인
                 </button>
               ) : (
-                <Link to="/todo">
-                  <button
-                    className="btn btn-danger btn-block"
-                    data-testid="signup-button"
-                    disabled={formValid}
-                  >
-                    로그인
-                  </button>
-                </Link>
+                <button
+                  className="btn btn-danger btn-block"
+                  data-testid="signup-button"
+                  disabled={formValid}
+                  onClick={handleSubmit}
+                >
+                  로그인
+                </button>
               )}
             </>
           </form>
