@@ -26,6 +26,7 @@ const Signup = () => {
       setFormValid(true);
     }
   };
+
   return (
     <div className="container">
       <div className="row">
@@ -58,16 +59,40 @@ const Signup = () => {
             </div>
             <div className="form-group">
               <p>
-                <Link to="/Signin">이미 회원이신가요?</Link>
+                <Link to="/signin">이미 회원이신가요?</Link>
               </p>
             </div>
-            <button
+            {/* <button
               className="btn btn-danger btn-block"
               data-testid="signup-button"
               disabled={formValid}
+              onClick={(e) => {
+                e.preventDefault();
+              }}
             >
-              <Link to="/signin">회원가입</Link>
-            </button>
+              회원가입
+            </button> */}
+            <>
+              {formValid ? (
+                <button
+                  className="btn btn-danger btn-block"
+                  data-testid="signup-button"
+                  disabled={formValid}
+                >
+                  회원가입
+                </button>
+              ) : (
+                <Link to="/signin">
+                  <button
+                    className="btn btn-danger btn-block"
+                    data-testid="signup-button"
+                    disabled={formValid}
+                  >
+                    회원가입
+                  </button>
+                </Link>
+              )}
+            </>
           </form>
         </div>
       </div>
