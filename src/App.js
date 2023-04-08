@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
+import Todo from "./components/Todo";
 
 const App = () => {
   return (
@@ -8,6 +9,7 @@ const App = () => {
       <Routes>
         <Route path="/signin" exact Component={Login} />
         <Route path="/signup" exact Component={Signup} />
+        <Route path="/todo" exact Component={Todo} />
       </Routes>
     </Router>
   );

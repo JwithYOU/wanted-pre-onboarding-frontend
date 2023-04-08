@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -63,14 +63,27 @@ const Login = () => {
                 <Link to="/signup">아직 회원이 아니신가요?</Link>
               </p>
             </div>
-            <button
-              type="submit"
-              className="btn btn-primary btn-block"
-              data-testid="signin-button"
-              disabled={formValid}
-            >
-              로그인
-            </button>
+            <>
+              {formValid ? (
+                <button
+                  className="btn btn-danger btn-block"
+                  data-testid="signup-button"
+                  disabled={formValid}
+                >
+                  로그인
+                </button>
+              ) : (
+                <Link to="/todo">
+                  <button
+                    className="btn btn-danger btn-block"
+                    data-testid="signup-button"
+                    disabled={formValid}
+                  >
+                    로그인
+                  </button>
+                </Link>
+              )}
+            </>
           </form>
         </div>
       </div>
