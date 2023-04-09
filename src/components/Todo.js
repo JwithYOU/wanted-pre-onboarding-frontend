@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 const Todo = () => {
   // const [jwt, setJwt] = useState("");
   const [todos, setTodos] = useState([]);
   const [inputText, setInputText] = useState("");
+  const [editText, setEditText] = useState("");
+  const [editList, setEditList] = useState(true);
 
   const getTokenLocalStorage = () => {
     return localStorage.getItem("JWT");
@@ -15,6 +18,18 @@ const Todo = () => {
     if (!token) {
       return (window.location.href = "/signin");
     }
+    axios
+      .get("https://www.pre-onboarding-selection-task.shop/todos", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }, [token]);
 
   const handleAddTodo = () => {
@@ -37,12 +52,24 @@ const Todo = () => {
     setTodos(todos.filter((todo, i) => i !== index));
   };
 
+  const handleEditTodo = (index, text) => {
+    setTodos(
+      todos.map((todo, i) => (i === index ? { ...todo, text: text } : todo))
+    );
+    setEditText("");
+  };
+
+  const handleChangeList = () => {
+    setEditList(!editList);
+  };
+
   return (
     <div className="container">
       <h1 className="text-center">Welcome to Todo list</h1>
       <div className="row mt-5">
         <div className="col-md-6 offset-md-3">
           <h3 className="text-center mb-3">Todo List</h3>
+          {/* todo list 추가하는 input */}
           <div className="input-group mb-3">
             <input
               type="text"
@@ -59,6 +86,7 @@ const Todo = () => {
               Add
             </button>
           </div>
+          {/* todo 항목 */}
           <ul className="list-group">
             {todos.map((todo, index) => (
               <li
@@ -67,7 +95,46 @@ const Todo = () => {
                   todo.completed ? "bg-success text-white" : ""
                 }`}
               >
-                <div className="form-check">
+                {editList ? (
+                  <>
+                    <div className="form-check">
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        checked={todo.completed}
+                        onChange={() => handleToggleTodo(index)}
+                      />
+                      <label className="form-check-label">{todo.text}</label>
+                    </div>
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={() => handleChangeList()}
+                      // onClick={() => setEditText(todo.text)}
+                    >
+                      수정
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <div>
+                      <input
+                        type="text"
+                        className="form-control mt-2"
+                        value={editText}
+                        onChange={(e) => setEditText(e.target.value)}
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      className="btn btn-primary mt-2"
+                      onClick={() => handleEditTodo(index, editText)}
+                    >
+                      제출
+                    </button>
+                  </>
+                )}
+                {/* <div className="form-check">
                   <input
                     className="form-check-input"
                     type="checkbox"
@@ -75,15 +142,36 @@ const Todo = () => {
                     onChange={() => handleToggleTodo(index)}
                   />
                   <label className="form-check-label">{todo.text}</label>
-                </div>
+                </div> */}
+
+                {/* 삭제 버튼 시작 */}
                 <button
                   type="button"
-                  className="close"
+                  className="btn btn-danger"
                   aria-label="Delete"
                   onClick={() => handleDeleteTodo(index)}
                 >
-                  <span aria-hidden="true">&times;</span>
+                  삭제
                 </button>
+                {/* 삭제 버튼 종료 */}
+
+                {/* {editText !== "" && (
+                  <div>
+                    <input
+                      type="text"
+                      className="form-control mt-2"
+                      value={editText}
+                      onChange={(e) => setEditText(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-primary mt-2"
+                      onClick={() => handleEditTodo(index, editText)}
+                    >
+                      제출
+                    </button>
+                  </div>
+                )} */}
               </li>
             ))}
           </ul>
