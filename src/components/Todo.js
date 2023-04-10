@@ -25,7 +25,8 @@ const Todo = () => {
         },
       })
       .then((res) => {
-        console.log(res);
+        console.log(res.data);
+        setTodos(res.data);
       })
       .catch((err) => {
         console.error(err);
@@ -33,6 +34,7 @@ const Todo = () => {
   }, [token]);
 
   const handleAddTodo = () => {
+    console.log(todos);
     if (inputText.trim() === "") {
       return;
     }
@@ -53,6 +55,7 @@ const Todo = () => {
   };
 
   const handleEditTodo = (index, text) => {
+    console.log(todos);
     setTodos(
       todos.map((todo, i) => (i === index ? { ...todo, text: text } : todo))
     );
@@ -92,7 +95,8 @@ const Todo = () => {
               <li
                 key={index}
                 className={`list-group-item ${
-                  todo.completed ? "bg-success text-white" : ""
+                  // todo.completed
+                  todo.isCompleted ? "bg-success text-white" : ""
                 }`}
               >
                 {editList ? (
@@ -101,10 +105,11 @@ const Todo = () => {
                       <input
                         className="form-check-input"
                         type="checkbox"
-                        checked={todo.completed}
+                        checked={todo.isCompleted} //todo.completed
                         onChange={() => handleToggleTodo(index)}
                       />
-                      <label className="form-check-label">{todo.text}</label>
+                      {/* todo.text */}
+                      <label className="form-check-label">{todo.todo}</label>
                     </div>
                     <button
                       type="button"
