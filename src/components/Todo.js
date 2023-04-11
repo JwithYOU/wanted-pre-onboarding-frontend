@@ -6,7 +6,7 @@ const Todo = () => {
   const [todos, setTodos] = useState([]);
   const [inputText, setInputText] = useState("");
   const [editText, setEditText] = useState("");
-  const [editList, setEditList] = useState(true);
+  const [editing, setEditing] = useState(null);
 
   const getTokenLocalStorage = () => {
     return localStorage.getItem("JWT");
@@ -14,12 +14,14 @@ const Todo = () => {
 
   const token = getTokenLocalStorage();
 
+  const apiUrl = "https://www.pre-onboarding-selection-task.shop/";
+
   useEffect(() => {
     if (!token) {
       return (window.location.href = "/signin");
     }
     axios
-      .get("https://www.pre-onboarding-selection-task.shop/todos", {
+      .get(`${apiUrl}todos`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -33,37 +35,84 @@ const Todo = () => {
       });
   }, [token]);
 
+  // add 버튼 함수
   const handleAddTodo = () => {
-    console.log(todos);
+    console.log(inputText);
     if (inputText.trim() === "") {
       return;
     }
-    setTodos([...todos, { text: inputText, completed: false }]);
+    axios
+      .post(
+        `${apiUrl}todos`,
+        { todo: inputText },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.status);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+
+    setTodos([...todos, { todo: inputText, isCompleted: false }]);
     setInputText("");
   };
 
-  const handleToggleTodo = (index) => {
+  const handleToggleTodo = (id) => {
     setTodos(
-      todos.map((todo, i) =>
-        i === index ? { ...todo, completed: !todo.completed } : todo
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo
       )
     );
   };
 
-  const handleDeleteTodo = (index) => {
-    setTodos(todos.filter((todo, i) => i !== index));
+  // 수정 버튼 함수
+  const handleEdit = (id, todo) => {
+    setEditing(id);
+    setEditText(todo);
   };
 
-  const handleEditTodo = (index, text) => {
+  // 삭제 버튼 함수
+  const handleDeleteTodo = (id) => {
+    console.log(id);
+    setTodos(todos.filter((todo) => todo.id !== id));
     console.log(todos);
-    setTodos(
-      todos.map((todo, i) => (i === index ? { ...todo, text: text } : todo))
-    );
-    setEditText("");
   };
 
-  const handleChangeList = () => {
-    setEditList(!editList);
+  // 제출 버튼 함수
+  const handleEditTodo = (text, id, completed) => {
+    setTodos(
+      todos.map((todo) => (todo.id === id ? { ...todo, todo: text } : todo))
+    );
+    setEditText(editText);
+    setEditing(null);
+    axios
+      .put(
+        `${apiUrl}todos/${id}`,
+        { todo: editText, isCompleted: completed },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.status);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  // 취소 버튼 함수
+  const cancelEdit = () => {
+    setEditing(null);
   };
 
   return (
@@ -93,36 +142,52 @@ const Todo = () => {
           <ul className="list-group">
             {todos.map((todo, index) => (
               <li
-                key={index}
+                key={todo.id}
                 className={`list-group-item ${
-                  // todo.completed
                   todo.isCompleted ? "bg-success text-white" : ""
                 }`}
               >
-                {editList ? (
+                {editing !== todo.id ? (
                   <>
                     <div className="form-check">
                       <input
                         className="form-check-input"
                         type="checkbox"
-                        checked={todo.isCompleted} //todo.completed
-                        onChange={() => handleToggleTodo(index)}
+                        checked={todo.isCompleted}
+                        onChange={() => handleToggleTodo(todo.id)}
                       />
-                      {/* todo.text */}
                       <label className="form-check-label">{todo.todo}</label>
                     </div>
+                    {/* 수정 버튼 시작 */}
                     <button
                       type="button"
                       className="btn btn-primary"
-                      onClick={() => handleChangeList()}
+                      onClick={() => handleEdit(todo.id, todo.todo)}
                       // onClick={() => setEditText(todo.text)}
                     >
                       수정
                     </button>
+                    {/* 수정 버튼 종료 */}
+                    {/* 삭제 버튼 시작 */}
+                    <button
+                      type="button"
+                      className="btn btn-danger"
+                      aria-label="Delete"
+                      onClick={() => handleDeleteTodo(todo.id)}
+                    >
+                      삭제
+                    </button>
+                    {/* 삭제 버튼 종료 */}
                   </>
                 ) : (
                   <>
                     <div>
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        checked={todo.isCompleted}
+                        onChange={() => handleToggleTodo(todo.id)}
+                      />
                       <input
                         type="text"
                         className="form-control mt-2"
@@ -130,53 +195,29 @@ const Todo = () => {
                         onChange={(e) => setEditText(e.target.value)}
                       />
                     </div>
+                    {/* 제출 버튼 시작 */}
                     <button
                       type="button"
                       className="btn btn-primary mt-2"
-                      onClick={() => handleEditTodo(index, editText)}
+                      onClick={() =>
+                        handleEditTodo(editText, todo.id, todo.isCompleted)
+                      }
                     >
                       제출
                     </button>
+                    {/* 제출 버튼 종료 */}
+                    {/* 취소 버튼 시작 */}
+                    <button
+                      type="button"
+                      className="btn btn-danger"
+                      aria-label="Delete"
+                      onClick={() => cancelEdit()}
+                    >
+                      취소
+                    </button>
+                    {/* 취소 버튼 종료 */}
                   </>
                 )}
-                {/* <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    checked={todo.completed}
-                    onChange={() => handleToggleTodo(index)}
-                  />
-                  <label className="form-check-label">{todo.text}</label>
-                </div> */}
-
-                {/* 삭제 버튼 시작 */}
-                <button
-                  type="button"
-                  className="btn btn-danger"
-                  aria-label="Delete"
-                  onClick={() => handleDeleteTodo(index)}
-                >
-                  삭제
-                </button>
-                {/* 삭제 버튼 종료 */}
-
-                {/* {editText !== "" && (
-                  <div>
-                    <input
-                      type="text"
-                      className="form-control mt-2"
-                      value={editText}
-                      onChange={(e) => setEditText(e.target.value)}
-                    />
-                    <button
-                      type="button"
-                      className="btn btn-primary mt-2"
-                      onClick={() => handleEditTodo(index, editText)}
-                    >
-                      제출
-                    </button>
-                  </div>
-                )} */}
               </li>
             ))}
           </ul>
