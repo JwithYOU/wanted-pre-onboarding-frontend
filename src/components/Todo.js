@@ -37,7 +37,6 @@ const Todo = () => {
 
   // add 버튼 함수
   const handleAddTodo = () => {
-    console.log(inputText);
     if (inputText.trim() === "") {
       return;
     }
@@ -53,13 +52,11 @@ const Todo = () => {
         }
       )
       .then((res) => {
-        console.log(res.status);
+        setTodos([...todos, res.data]);
       })
       .catch((err) => {
         console.error(err);
       });
-
-    setTodos([...todos, { todo: inputText, isCompleted: false }]);
     setInputText("");
   };
 
@@ -147,7 +144,7 @@ const Todo = () => {
           </div>
           {/* todo 항목 */}
           <ul className="list-group">
-            {todos.map((todo, index) => (
+            {todos.map((todo) => (
               <li
                 key={todo.id}
                 className={`list-group-item ${
