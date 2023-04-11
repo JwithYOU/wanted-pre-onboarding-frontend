@@ -79,9 +79,16 @@ const Todo = () => {
 
   // 삭제 버튼 함수
   const handleDeleteTodo = (id) => {
-    console.log(id);
     setTodos(todos.filter((todo) => todo.id !== id));
-    console.log(todos);
+    axios
+      .delete(`${apiUrl}todos/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   // 제출 버튼 함수
