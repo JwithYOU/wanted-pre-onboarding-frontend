@@ -130,16 +130,18 @@ const Todo = () => {
             <input
               type="text"
               className="form-control"
+              data-testid="new-todo-input"
               placeholder="Add todo"
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
             />
             <button
               className="btn btn-primary"
+              data-testid="new-todo-add-button"
               type="button"
               onClick={handleAddTodo}
             >
-              Add
+              추가
             </button>
           </div>
           {/* todo 항목 */}
@@ -166,6 +168,7 @@ const Todo = () => {
                     <button
                       type="button"
                       className="btn btn-primary"
+                      data-testid="modify-button"
                       onClick={() => handleEdit(todo.id, todo.todo)}
                       // onClick={() => setEditText(todo.text)}
                     >
@@ -176,6 +179,7 @@ const Todo = () => {
                     <button
                       type="button"
                       className="btn btn-danger"
+                      data-testid="delete-button"
                       aria-label="Delete"
                       onClick={() => handleDeleteTodo(todo.id)}
                     >
@@ -195,6 +199,7 @@ const Todo = () => {
                       <input
                         type="text"
                         className="form-control mt-2"
+                        data-testid="modify-input"
                         value={editText}
                         onChange={(e) => setEditText(e.target.value)}
                       />
@@ -203,6 +208,7 @@ const Todo = () => {
                     <button
                       type="button"
                       className="btn btn-primary mt-2"
+                      data-testid="submit-button"
                       onClick={() =>
                         handleEditTodo(editText, todo.id, todo.isCompleted)
                       }
@@ -214,6 +220,7 @@ const Todo = () => {
                     <button
                       type="button"
                       className="btn btn-danger"
+                      data-testid="cancel-button"
                       aria-label="Delete"
                       onClick={() => cancelEdit()}
                     >
