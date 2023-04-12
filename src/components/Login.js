@@ -101,7 +101,7 @@ const Login = () => {
                   {formValid ? (
                     <button
                       className="btn btn-danger btn-block"
-                      data-testid="signup-button"
+                      data-testid="signin-button"
                       disabled={formValid}
                     >
                       로그인
@@ -109,7 +109,7 @@ const Login = () => {
                   ) : (
                     <button
                       className="btn btn-danger btn-block"
-                      data-testid="signup-button"
+                      data-testid="signin-button"
                       disabled={formValid}
                       onClick={handleSubmit}
                     >
