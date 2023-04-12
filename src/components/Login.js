@@ -7,15 +7,10 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [psword, setPsword] = useState("");
   const [formValid, setFormValid] = useState(true);
-  // const [jwt, setJwt] = useState("");
 
   const jwt = localStorage.getItem("JWT");
-  // useEffect(() => {
-  //   setJwt(localStorage.getItem("JWT"));
-  //   if (jwt) {
-  //     return (window.location.href = "/todo");
-  //   }
-  // }, [jwt]);
+
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   const emailHandleChange = (e) => {
     e.preventDefault();
@@ -41,7 +36,7 @@ const Login = () => {
     e.preventDefault();
     axios
       .post(
-        "https://www.pre-onboarding-selection-task.shop/auth/signin",
+        `${apiUrl}auth/signin`,
         { email: email, password: psword },
         { headers: { "Content-Type": "application/json" } }
       )

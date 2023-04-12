@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 const Todo = () => {
-  // const [jwt, setJwt] = useState("");
   const [todos, setTodos] = useState([]);
   const [inputText, setInputText] = useState("");
   const [editText, setEditText] = useState("");
@@ -14,7 +13,7 @@ const Todo = () => {
 
   const token = getTokenLocalStorage();
 
-  const apiUrl = "https://www.pre-onboarding-selection-task.shop/";
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     if (!token) {
@@ -27,13 +26,12 @@ const Todo = () => {
         },
       })
       .then((res) => {
-        console.log(res.data);
         setTodos(res.data);
       })
       .catch((err) => {
         console.error(err);
       });
-  }, [token]);
+  }, [apiUrl, token]);
 
   // add 버튼 함수
   const handleAddTodo = () => {
@@ -106,9 +104,6 @@ const Todo = () => {
           },
         }
       )
-      .then((res) => {
-        console.log(res.status);
-      })
       .catch((err) => {
         console.error(err);
       });

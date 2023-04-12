@@ -7,18 +7,10 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [psword, setPsword] = useState("");
   const [formValid, setFormValid] = useState(true);
-  // const [jwt, setJwt] = useState("");
 
   const jwt = localStorage.getItem("JWT");
 
   const apiUrl = process.env.REACT_APP_API_URL;
-
-  // useEffect(() => {
-  //   setJwt(localStorage.getItem("JWT"));
-  //   if (jwt) {
-  //     return (window.location.href = "/todo");
-  //   }
-  // }, [jwt]);
 
   const emailHandleChange = (e) => {
     e.preventDefault();
@@ -42,7 +34,6 @@ const Signup = () => {
 
   const handleSignUp = (e) => {
     e.preventDefault();
-    console.log(apiUrl);
     axios
       .post(
         `${apiUrl}auth/signup`,
@@ -50,7 +41,6 @@ const Signup = () => {
         { headers: { "Content-Type": "application/json" } }
       )
       .then((res) => {
-        console.log(res.status);
         if (res.status === 201) window.location.href = "/signin";
       })
       .catch((err) => {
