@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import axios from "axios";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -9,6 +10,8 @@ const Signup = () => {
   // const [jwt, setJwt] = useState("");
 
   const jwt = localStorage.getItem("JWT");
+
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   // useEffect(() => {
   //   setJwt(localStorage.getItem("JWT"));
@@ -35,6 +38,24 @@ const Signup = () => {
     } else {
       setFormValid(true);
     }
+  };
+
+  const handleSignUp = (e) => {
+    e.preventDefault();
+    console.log(apiUrl);
+    axios
+      .post(
+        `${apiUrl}auth/signup`,
+        { email: email, password: psword },
+        { headers: { "Content-Type": "application/json" } }
+      )
+      .then((res) => {
+        console.log(res.status);
+        if (res.status === 201) window.location.href = "/signin";
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   return (
@@ -86,15 +107,14 @@ const Signup = () => {
                       회원가입
                     </button>
                   ) : (
-                    <Link to="/signin">
-                      <button
-                        className="btn btn-danger btn-block"
-                        data-testid="signup-button"
-                        disabled={formValid}
-                      >
-                        회원가입
-                      </button>
-                    </Link>
+                    <button
+                      className="btn btn-danger btn-block"
+                      data-testid="signup-button"
+                      disabled={formValid}
+                      onClick={handleSignUp}
+                    >
+                      회원가입
+                    </button>
                   )}
                 </>
               </form>
