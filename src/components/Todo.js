@@ -33,6 +33,8 @@ const Todo = () => {
           localStorage.removeItem("JWT");
           return (window.location.href = "/signin");
         });
+    } else {
+      return (window.location.href = "/signin");
     }
   }, [apiUrl, token]);
 
@@ -137,8 +139,13 @@ const Todo = () => {
   };
 
   // 취소 버튼 함수
-  const cancelEdit = () => {
+  const cancelEdit = (id) => {
     setEditing(null);
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo
+      )
+    );
   };
 
   return (
@@ -244,7 +251,7 @@ const Todo = () => {
                       className="btn btn-danger"
                       data-testid="cancel-button"
                       aria-label="Delete"
-                      onClick={() => cancelEdit()}
+                      onClick={() => cancelEdit(todo.id)}
                     >
                       취소
                     </button>

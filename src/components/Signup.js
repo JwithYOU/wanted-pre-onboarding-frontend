@@ -15,20 +15,6 @@ const Signup = () => {
   };
 
   const token = getTokenLocalStorage();
-  if (token) {
-    axios
-      .get(`${apiUrl}todos`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(() => {
-        window.location.href = "/todo";
-      })
-      .catch(() => {
-        localStorage.removeItem("JWT");
-      });
-  }
 
   useEffect(() => {
     if (token) {
