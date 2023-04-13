@@ -7,34 +7,42 @@ const Todo = () => {
   const [editText, setEditText] = useState("");
   const [editing, setEditing] = useState(null);
 
+  const apiUrl = process.env.REACT_APP_API_URL;
+
   const getTokenLocalStorage = () => {
     return localStorage.getItem("JWT");
   };
 
   const token = getTokenLocalStorage();
 
-  const apiUrl = process.env.REACT_APP_API_URL;
-
   useEffect(() => {
-    if (!token) {
-      return (window.location.href = "/signin");
+    if (token) {
+      axios
+        .get(`${apiUrl}todos`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            setTodos(res.data);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          localStorage.removeItem("JWT");
+          return (window.location.href = "/signin");
+        });
     }
-    axios
-      .get(`${apiUrl}todos`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        setTodos(res.data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
   }, [apiUrl, token]);
 
   // add 버튼 함수
   const handleAddTodo = () => {
+    const getTokenLocalStorage = () => {
+      return localStorage.getItem("JWT");
+    };
+    const token = getTokenLocalStorage();
+
     if (inputText.trim() === "") {
       return;
     }
@@ -51,13 +59,16 @@ const Todo = () => {
       )
       .then((res) => {
         setTodos([...todos, res.data]);
+        setInputText("");
       })
       .catch((err) => {
         console.error(err);
+        localStorage.removeItem("JWT");
+        return (window.location.href = "/signin");
       });
-    setInputText("");
   };
 
+  // 체크박스 함수
   const handleToggleTodo = (id) => {
     setTodos(
       todos.map((todo) =>
@@ -74,25 +85,33 @@ const Todo = () => {
 
   // 삭제 버튼 함수
   const handleDeleteTodo = (id) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
+    const getTokenLocalStorage = () => {
+      return localStorage.getItem("JWT");
+    };
+    const token = getTokenLocalStorage();
+
     axios
       .delete(`${apiUrl}todos/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
-      .catch((err) => {
-        console.error(err);
+      .then(() => {
+        setTodos(todos.filter((todo) => todo.id !== id));
+      })
+      .catch(() => {
+        localStorage.removeItem("JWT");
+        return (window.location.href = "/signin");
       });
   };
 
   // 제출 버튼 함수
-  const handleEditTodo = (text, id, completed) => {
-    setTodos(
-      todos.map((todo) => (todo.id === id ? { ...todo, todo: text } : todo))
-    );
-    setEditText(editText);
-    setEditing(null);
+  const handleEditTodo = async (text, id, completed) => {
+    const getTokenLocalStorage = () => {
+      return localStorage.getItem("JWT");
+    };
+    const token = getTokenLocalStorage();
+
     axios
       .put(
         `${apiUrl}todos/${id}`,
@@ -104,8 +123,16 @@ const Todo = () => {
           },
         }
       )
-      .catch((err) => {
-        console.error(err);
+      .then(() => {
+        setTodos(
+          todos.map((todo) => (todo.id === id ? { ...todo, todo: text } : todo))
+        );
+        setEditText(editText);
+        setEditing(null);
+      })
+      .catch(() => {
+        localStorage.removeItem("JWT");
+        return (window.location.href = "/signin");
       });
   };
 
