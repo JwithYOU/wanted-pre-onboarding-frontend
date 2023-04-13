@@ -62,14 +62,12 @@ const Login = () => {
         { headers: { "Content-Type": "application/json" } }
       )
       .then((res) => {
-        console.log(res.status);
         if (res.status === 200) {
           localStorage.setItem("JWT", res.data.access_token);
           window.location.href = "/todo";
         }
       })
       .catch((err) => {
-        console.log("에러");
         console.error(err);
       });
   };
