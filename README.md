@@ -10,4 +10,4 @@
 
 <iframe width="560" height="315" src="https://youtu.be/a-MY_QHXOqA" frameborder="0" allowfullscreen></iframe>
 
-[![Alt text])](https://youtu.be/a-MY_QHXOqA)
+[데모 영상 유튜브 링크](https://youtu.be/a-MY_QHXOqA)
