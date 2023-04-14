@@ -8,4 +8,4 @@
 
 ### 데모 영상
 
-<iframe src="https://youtu.be/a-MY_QHXOqA" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://youtu.be/a-MY_QHXOqA" frameborder="0" allowfullscreen></iframe>
