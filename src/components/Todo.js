@@ -6,6 +6,7 @@ const Todo = () => {
   const [inputText, setInputText] = useState("");
   const [editText, setEditText] = useState("");
   const [editing, setEditing] = useState(null);
+  const [checkBoll, setCheckBool] = useState();
 
   const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -80,7 +81,8 @@ const Todo = () => {
   };
 
   // 수정 버튼 함수
-  const handleEdit = (id, todo) => {
+  const handleEdit = (id, todo, completed) => {
+    setCheckBool(completed);
     setEditing(id);
     setEditText(todo);
   };
@@ -143,7 +145,7 @@ const Todo = () => {
     setEditing(null);
     setTodos(
       todos.map((todo) =>
-        todo.id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo
+        todo.id === id ? { ...todo, isCompleted: checkBoll } : todo
       )
     );
   };
@@ -198,7 +200,9 @@ const Todo = () => {
                       type="button"
                       className="btn btn-primary"
                       data-testid="modify-button"
-                      onClick={() => handleEdit(todo.id, todo.todo)}
+                      onClick={() =>
+                        handleEdit(todo.id, todo.todo, todo.isCompleted)
+                      }
                       // onClick={() => setEditText(todo.text)}
                     >
                       수정
